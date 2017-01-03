@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM phusion/baseimage:0.9.18
 MAINTAINER xama <oliver@xama.us>
 ENV SEAFILE_VERSION 6.0.5
 
