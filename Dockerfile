@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.18
+FROM ubuntu
 MAINTAINER xama <oliver@xama.us>
 ENV SEAFILE_VERSION 6.0.5
 
@@ -15,27 +15,10 @@ RUN apt-get update && apt-get install -y \
   python-urllib3 sqlite3 wget \
   libreoffice libreoffice-script-provider-python fonts-vlgothic ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy && pip install boto
 
-# Create service directories
-RUN mkdir /etc/service/{seafile,seahub}
-
-# Install Seafile service.
-ADD service-seafile-run.sh /etc/service/seafile/run
-ADD service-seafile-stop.sh /etc/service/seafile/stop
-
-# Install Seahub service.
-ADD service-seahub-run.sh /etc/service/seahub/run
-ADD service-seahub-stop.sh /etc/service/seahub/stop
-
-# Set permissions
-RUN chmod +x /etc/service/seafile/* && chmod +x /etc/service/seahub/*
-
 # Add custom configuration
 COPY seafevents.conf /seafevents.conf
 
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ADD setup.sh /usr/local/sbin/setup
-ADD upgrade.sh /usr/local/sbin/upgrade
-RUN chmod +x /usr/local/sbin/setup && chmod +x /usr/local/sbin/upgrade
-CMD /sbin/my_init
+CMD /seafile/seafile-server-latest/seafile.sh start && /seafile/seafile-server-latest/seahub.sh start
